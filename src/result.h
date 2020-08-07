@@ -14,6 +14,8 @@ struct res_good {
     GOOD_TYPE data;
 };
 
+typedef BAD_TYPE (*res_fn_aggregate)(BAD_TYPE old_bad, BAD_TYPE new_bad);
+
 /**
  * Different types of result
  */
@@ -66,6 +68,12 @@ bool res_is_good(struct result *res);
  */
 bool res_is_bad(struct result *res);
 
+/**
+ * Append new information to the existing `Bad` result. `fn` is the function used
+ * to append new_err to the existing error
+ */
+void res_bad_aggregate(struct result *res, BAD_TYPE new_err, res_fn_aggregate fn);
+
 BAD_TYPE res_bad(struct result *res)
 {
     if (res->kind == GOOD)
@@ -110,4 +118,12 @@ bool res_is_good(struct result *res)
 bool res_is_bad(struct result *res)
 {
     return res->kind == BAD;
+}
+
+void res_bad_aggregate(struct result *res, BAD_TYPE new_err, res_fn_aggregate fn)
+{
+    if (res->kind == GOOD)
+        errx(1, "%s", "trying to access error on `Good` result");
+
+    res->data.bad.error = fn(res->data.bad.error, new_err);
 }

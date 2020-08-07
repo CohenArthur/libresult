@@ -76,8 +76,12 @@ struct result_ptr r_read_file(char *path)
     struct result_ptr r_ptr = r_malloc(sizeof(struct some_file_helper));
 
     if (result_ptr_is_bad(r_ptr))
+    {
         /* Return the error which is now "allocation failed: couldn't open file"
-        return result_ptr_bad_aggregate(r_ptr, ": couldn't open file", err_aggregate))
+        result_ptr_bad_aggregate(r_ptr, ": couldn't open file", err_aggregate))
+
+        return r_ptr;
+    }
 
     /* Allocation was fine */
 }
@@ -88,10 +92,12 @@ The resulting struct exposes the following API
 
 |function's name|
 |---|
-|`<name>_some`|
-|`<name>_none`|
-|`<name>_get`|
-|`<name>_is_some`|
-|`<name>_is_none`|
+|`<name>_bad`|
+|`<name>_is_bad`|
+|`<name>_bad_new`|
+|`<name>_bad_aggregate`|
+|`<name>_good`|
+|`<name>_is_good`|
+|`<name>_good_new`|
 
 # Limitations
