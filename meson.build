@@ -10,6 +10,8 @@ tests = [
   'test_result.c',
 ]
 
+add_project_arguments('-Werror', language: 'c')
+
 foreach test_src: tests
   bin = executable('bin' + test_src, 'tests/' + test_src)
   test('bin' + test_src, bin, args: [
