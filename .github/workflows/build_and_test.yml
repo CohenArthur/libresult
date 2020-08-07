@@ -1,0 +1,31 @@
+name: libresult-test
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: alexisehret/archlinux_c_meson
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build libresult
+      run: |
+          meson build
+          cd build
+          ninja
+
+  tests:
+    runs-on: ubuntu-latest
+    container:
+      image: alexisehret/archlinux_c_meson
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Unit Tests
+      run: |
+          meson build
+          cd build
+          ninja test
