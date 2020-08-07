@@ -10,20 +10,26 @@
 #define ASSERT_TRUE(Exp) assert(Exp)
 #define ASSERT_EQ(Lhs, Rhs) assert(Lhs == Rhs)
 
+RES_DECLARE(result, unsigned long, char *);
+RES_DEFINE(result, unsigned long, char *)
+
+RES_DECLARE(res_flag, unsigned long, unsigned int);
+RES_DEFINE(res_flag, unsigned long, unsigned int)
+
 TEST(result, good)
 {
-    struct result res = res_good_new(120);
+    struct result res = result_good_new(120);
 
-    ASSERT_EQ(res_good(&res), 120);
-    ASSERT_TRUE(res_is_good(&res));
+    ASSERT_EQ(result_good(&res), 120);
+    ASSERT_TRUE(result_is_good(&res));
 }
 
 TEST(result, bad)
 {
-    struct result res = res_bad_new("Oh fuck");
+    struct result res = result_bad_new("Oh fuck");
 
-    ASSERT_EQ(strcmp(res_bad(&res), "Oh fuck"), 0);
-    ASSERT_TRUE(res_is_bad(&res));
+    ASSERT_EQ(strcmp(result_bad(&res), "Oh fuck"), 0);
+    ASSERT_TRUE(result_is_bad(&res));
 }
 
 static char *str_concat(char *old, char *new)
@@ -44,13 +50,32 @@ TEST(result, aggregate)
     char *err_msg = calloc(1, 256);
     memcpy(err_msg, "Result<", 7);
 
-    struct result res = res_bad_new(err_msg);
+    struct result res = result_bad_new(err_msg);
 
-    res_bad_aggregate(&res, "Option<T>>", str_concat);
+    result_bad_aggregate(&res, "Option<T>>", str_concat);
 
-    ASSERT_EQ(strcmp(res_bad(&res), "Result<Option<T>>"), 0);
+    ASSERT_EQ(strcmp(result_bad(&res), "Result<Option<T>>"), 0);
 
-    free(res_bad(&res));
+    free(result_bad(&res));
+}
+
+static unsigned int flag_agg(unsigned int lhs, unsigned int rhs)
+{
+    return lhs | rhs;
+}
+
+TEST(res_flag, aggregate)
+{
+    unsigned int err_flag = 0 << 1;
+
+    struct res_flag res = res_flag_bad_new(err_flag);
+
+    res_flag_bad_aggregate(&res, 0 << 2, flag_agg);
+    res_flag_bad_aggregate(&res, 0 << 3, flag_agg);
+
+    ASSERT_TRUE(res_flag_bad(&res) & 0 << 1);
+    ASSERT_TRUE(res_flag_bad(&res) & 0 << 2);
+    ASSERT_TRUE(res_flag_bad(&res) & 0 << 3);
 }
 
 int main(void)

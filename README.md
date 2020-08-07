@@ -64,7 +64,7 @@ char *err_aggregate(char *og, char *new)
 
     char *og = realloc(og, og_l + new_l + 1);
 
-    memcpy(og + og_l, new, new_l - og_l);
+    memcpy(og + og_l, new, new_l);
 
     og[og_l + new_l] = '\0';
 
