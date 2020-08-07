@@ -77,7 +77,7 @@ struct result_ptr r_read_file(char *path)
 
     if (result_ptr_is_bad(r_ptr))
     {
-        /* Return the error which is now "allocation failed: couldn't open file"
+        /* Return the error which is now "allocation failed: couldn't open file" */
         result_ptr_bad_aggregate(r_ptr, ": couldn't open file", err_aggregate))
 
         return r_ptr;
