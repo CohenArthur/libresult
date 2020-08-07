@@ -22,16 +22,7 @@ enum res_kind { BAD = 0, GOOD };
     /**                                                                 \
      * Simple result struct containing a `Good` or a `Bad` type         \
      */                                                                 \
-    struct Name {                                                       \
-        /* The kind of result contained */                              \
-        enum res_kind kind;                                             \
-                                                                        \
-        /* The different types contained inside the Result */           \
-        union {                                                         \
-            struct Name##_bad bad;                                      \
-            struct Name##_good good;                                    \
-        } data;                                                         \
-    };                                                                  \
+    struct Name;                                                        \
                                                                         \
     /**                                                                 \
      * Returns the data associated with a bad result                    \
@@ -71,6 +62,17 @@ enum res_kind { BAD = 0, GOOD };
                               Name##_fn_aggregate fn)
 
 #define RES_DEFINE(Name, Good, Bad)                                     \
+    struct Name {                                                       \
+        /* The kind of result contained */                              \
+        enum res_kind kind;                                             \
+                                                                        \
+        /* The different types contained inside the Result */           \
+        union {                                                         \
+            struct Name##_bad bad;                                      \
+            struct Name##_good good;                                    \
+        } data;                                                         \
+    };                                                                  \
+                                                                        \
     Bad Name##_bad(struct Name *res) {                                  \
         if (res->kind == GOOD)                                          \
             errx(1, "%s", "trying to access error on `Good` result");   \
