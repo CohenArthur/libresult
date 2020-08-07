@@ -9,7 +9,6 @@
 enum res_kind { BAD = 0, GOOD };
 
 #define RES_DECLARE(Name, Good, Bad)                                    \
-                                                                        \
     struct Name##_bad {                                                 \
         Bad error;                                                      \
     };                                                                  \
@@ -47,7 +46,7 @@ enum res_kind { BAD = 0, GOOD };
     /**                                                                 \
      * Create a new, good result                                        \
      */                                                                 \
-    struct Name Name##_good_new(Good data);                        \
+    struct Name Name##_good_new(Good data);                             \
                                                                         \
     /**                                                                 \
      * Create a new, bad result                                         \
@@ -86,7 +85,7 @@ enum res_kind { BAD = 0, GOOD };
         return res->data.good.data;                                     \
     }                                                                   \
                                                                         \
-    struct Name Name##_good_new(Good data) {                       \
+    struct Name Name##_good_new(Good data) {                            \
         struct Name res = {                                             \
             .kind = GOOD,                                               \
             .data.good.data = data,                                     \
