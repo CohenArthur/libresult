@@ -58,8 +58,8 @@ enum res_kind { BAD = 0, GOOD };
      * Append new information to the existing `Bad` result. `fn` is the \
      * function used to append new_err to the existing error            \
      */                                                                 \
-    void Name##_bad_aggregate(struct Name *res, Bad new_err,            \
-                              Name##_fn_aggregate fn);
+    void Name##_propagate(struct Name *res, Bad new_err,                \
+                          Name##_fn_aggregate fn);
 
 #define RES_DEFINE(Name, Good, Bad)                                     \
     struct Name {                                                       \
@@ -109,7 +109,7 @@ enum res_kind { BAD = 0, GOOD };
                                                                         \
     bool Name##_is_bad(struct Name *res) { return res->kind == BAD; }   \
                                                                         \
-    void Name##_bad_aggregate(struct Name *res, Bad new_err,            \
+    void Name##_bad_propagate(struct Name *res, Bad new_err,            \
                               Name##_fn_aggregate fn) {                 \
         if (res->kind == GOOD)                                          \
             errx(1, "%s", "trying to access error on `Good` result");   \

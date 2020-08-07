@@ -10,10 +10,10 @@
 #define ASSERT_TRUE(Exp) assert(Exp)
 #define ASSERT_EQ(Lhs, Rhs) assert(Lhs == Rhs)
 
-RES_DECLARE(result, unsigned long, char *);
+RES_DECLARE(result, unsigned long, char *)
 RES_DEFINE(result, unsigned long, char *)
 
-RES_DECLARE(res_flag, unsigned long, unsigned int);
+RES_DECLARE(res_flag, unsigned long, unsigned int)
 RES_DEFINE(res_flag, unsigned long, unsigned int)
 
 TEST(result, good)
@@ -45,14 +45,14 @@ static char *str_concat(char *old, char *new)
     return old;
 }
 
-TEST(result, aggregate)
+TEST(result, propagate)
 {
     char *err_msg = calloc(1, 256);
     memcpy(err_msg, "Result<", 7);
 
     struct result res = result_bad_new(err_msg);
 
-    result_bad_aggregate(&res, "Option<T>>", str_concat);
+    result_bad_propagate(&res, "Option<T>>", str_concat);
 
     ASSERT_EQ(strcmp(result_bad(&res), "Result<Option<T>>"), 0);
 
@@ -64,14 +64,14 @@ static unsigned int flag_agg(unsigned int lhs, unsigned int rhs)
     return lhs | rhs;
 }
 
-TEST(res_flag, aggregate)
+TEST(res_flag, propagate)
 {
     unsigned int err_flag = 0 << 1;
 
     struct res_flag res = res_flag_bad_new(err_flag);
 
-    res_flag_bad_aggregate(&res, 0 << 2, flag_agg);
-    res_flag_bad_aggregate(&res, 0 << 3, flag_agg);
+    res_flag_bad_propagate(&res, 0 << 2, flag_agg);
+    res_flag_bad_propagate(&res, 0 << 3, flag_agg);
 
     ASSERT_TRUE(res_flag_bad(&res) & 0 << 1);
     ASSERT_TRUE(res_flag_bad(&res) & 0 << 2);
@@ -82,5 +82,5 @@ int main(void)
 {
     RUN_TEST(result, good);
     RUN_TEST(result, bad);
-    RUN_TEST(result, aggregate);
+    RUN_TEST(result, propagate);
 }
