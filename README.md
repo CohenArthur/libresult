@@ -85,7 +85,6 @@ struct result_ptr r_read_file(char *path)
 
     /* Allocation was fine */
 }
-
 ```
 
 The resulting struct exposes the following API
